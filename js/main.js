@@ -10,9 +10,9 @@ const createElemWithText = (element, textContent, className) => {
   }
 
   if (textContent === "" || !textContent) {
-    tag.innerText = "";
+    tag.textContent = "";
   } else {
-    tag.innerText = `${textContent}`;
+    tag.textContent = `${textContent}`;
   }
 
   if (className) {
@@ -24,12 +24,10 @@ const createElemWithText = (element, textContent, className) => {
 
 //-----------------------------------2
 
-const createSelectOptions = async jasonDataURL => {
-  if (!jasonDataURL) return;
+const createSelectOptions = jsonData => {
+  if (!jsonData) return;
 
   const resultArray = [];
-
-  const jsonData = await jasonDataURL;
 
   for (let i = 0; i < jsonData.length; i++) {
     const id = jsonData[i].id;
@@ -48,14 +46,11 @@ const createSelectOptions = async jasonDataURL => {
 // ----------------------------------3
 
 const toggleCommentSection = postId => {
-  if (!postId || postId === null) {
-    return;
-  }
+
+  if (!postId ) return;
 
   if (postId) {
-    const elemSection = document.querySelector(
-      `section[data-post-id="${postId}"]`
-    );
+    const elemSection = document.querySelector(`section[data-post-id="${postId}"]`);
 
     if (elemSection) {
       elemSection.classList.toggle("hide");
@@ -68,17 +63,17 @@ const toggleCommentSection = postId => {
 //---------------------------------------4
 
 const toggleCommentButton = postId => {
-  if (!postId) {
-    return;
-  }
+  if (!postId) return;
 
   if (postId) {
-    let button = document.querySelector(`button[data-post-id="${postId}"]`);
+
+    if (!document.querySelector(`button[data-post-id="${postId}"]`)) return null;
+
+    button = document.querySelector(`button[data-post-id="${postId}"]`);
 
     if (button) {
-      let buttonText = document.querySelector(
-        `button[data-post-id="${postId}"]`
-      ).textContent;
+
+      let buttonText = document.querySelector(`button[data-post-id="${postId}"]`).textContent;
 
       buttonText = buttonText.replace(/(\r\n|\n|\r)/gm, "");
 
@@ -96,11 +91,9 @@ const toggleCommentButton = postId => {
 //----------------------------------5
 
 const deleteChildElements = parentElement => {
+
   if (!parentElement) return;
-
-  if (typeof parentElement == "undefined") return;
-
-  // const parentElement = document.getElementById("searchResults");
+ // if (parentElement !== typeof Element) return;
 
   let child = parentElement.lastElementChild;
 
@@ -131,7 +124,7 @@ const addButtonListeners = () => {
         function(e) {
           toggleComments(e, postId);
         },
-        false
+        true
       );
     }
   }
@@ -168,6 +161,7 @@ const removeButtonListeners = () => {
 //--------------------------------------8
 
 const createComments = async jsonComments => {
+  
   if (!jsonComments) return;
 
   const Comments = await jsonComments;
@@ -199,9 +193,9 @@ const createComments = async jsonComments => {
 //---------------------------------9
 
 const populateSelectMenu = async jasonData => {
-  if (!jasonData || jasonData === "") {
-    return;
-  } else {
+  
+  if (!jasonData) return;
+
     let resultArray = [];
 
     const jsonData = await jasonData;
@@ -219,7 +213,7 @@ const populateSelectMenu = async jasonData => {
     }
 
     return selectMenu;
-  }
+  
 };
 
 //----------------------------------10
@@ -238,6 +232,9 @@ const getUsers = async () => {
 //-------------------------------11
 
 const getUserPosts = async userID => {
+
+  if (!userID) return;
+
   try {
     const response = await fetch(
       `https://jsonplaceholder.typicode.com/users/${userID}/posts`
@@ -254,6 +251,9 @@ const getUserPosts = async userID => {
 //-----------------------------------------12
 
 const getUser = async userID => {
+
+  if (!userID) return;
+
   try {
     const response = await fetch(
       `https://jsonplaceholder.typicode.com/users/${userID}`
@@ -270,7 +270,12 @@ const getUser = async userID => {
 //--------------------------------13
 
 const getPostComments = async postID => {
+
   try {
+
+  if (!postID) return;
+
+
     const response = await fetch(
       `https://jsonplaceholder.typicode.com/comments/${postID}`
     );
